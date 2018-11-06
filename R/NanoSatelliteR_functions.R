@@ -10,6 +10,7 @@
 #' @param dir Path denoted as a character vector of length 1. 
 #' @examples 
 #' df <- load_summary("/storage/NanoSatellite_chunks/") 
+#' @export
 load_summary=function(dir){
   summary_files=list.files(dir,".table",recursive = T,full.names = T)
   summaries=lapply(summary_files,read.table,sep="\t",header=T,stringsAsFactors=F)
@@ -37,6 +38,7 @@ load_summary=function(dir){
 #' @examples
 #' df <- load_summary("/storage/NanoSatellite_chunks/")
 #' qc <- summary_qc(df)
+#' @export
 summary_qc=function(df){
   flank_cutoff=boxplot(df$avg_flank_normdist,plot=F)$stats[5,]
   center_cutoff=boxplot(df$avg_center_normdist,plot=F)$stats[5,]
@@ -72,6 +74,7 @@ summary_qc=function(df){
 #' df <- load_summary("/storage/NanoSatellite_chunks/")
 #' qc <- summary_qc(df)
 #' df2 <- qual_reads(df,qc$center_cutoff)
+#' @export
 qual_reads=function(df,center_cutoff=1,flank_cutoff=1){
   df[df$avg_center_normdist <= center_cutoff & df$avg_flank_normdist <= flank_cutoff,]
 }
@@ -89,6 +92,7 @@ qual_reads=function(df,center_cutoff=1,flank_cutoff=1){
 #' qc <- summary_qc(df)
 #' df2 <- qual_reads(df,qc$center_cutoff)
 #' plot_lengths(df2)
+#' @export
 plot_lengths=function(df,binwidth=5){
   df$strand_factor=factor(df$strand,levels=c("positive","negative"))
 
@@ -118,6 +122,7 @@ plot_lengths=function(df,binwidth=5){
 #' qc <- summary_qc(df)
 #' df2 <- qual_reads(df,qc$center_cutoff)
 #' squiggles <- load_squiggles("/storage/NanoSatellite_chunks/",df2)
+#' @export
 load_squiggles=function(dir,df=NULL){
   chunk_files=list(positive=list.files(dir,"positive",full.names = T,recursive=T),
                    negative=list.files(dir,"negative",full.names = T,recursive=T))
@@ -151,6 +156,7 @@ load_squiggles=function(dir,df=NULL){
 #' This function is slightly adapted from the base heatmap() function
 #' to allow control over the line width of the dendrograms. It is
 #' recommended to run ns_heatmap() which incorporates heatmap_custom().
+#' @export
 heatmap_custom=function (x, Rowv = NULL, Colv = if (symm) "Rowv" else NULL,
                          distfun = dist, hclustfun = hclust, reorderfun = function(d,
                                                                                    w) reorder(d, w), add.expr, symm = FALSE, revC = identical(Colv,
@@ -346,6 +352,7 @@ heatmap_custom=function (x, Rowv = NULL, Colv = if (symm) "Rowv" else NULL,
 #'
 #' positive_clustering=tsclust(squiggles$positive,type="h",k=k_clusters,trace=TRUE,distance = "dtw_basic", control=hierarchical_control(method="ward.D",symmetric = T))
 #' ns_heatmap(positive_clustering@distmat,"~/test.png",max_dist=200,rm0=T)
+#' @export
 ns_heatmap=function(distmat,file,lwd=10,max_dist=NA,rm0=F){
   ns_hclust=hclust(stats::as.dist(distmat,diag = T),method="ward.D")
   ns_dendro=as.dendrogram(ns_hclust)
@@ -388,6 +395,7 @@ ns_heatmap=function(distmat,file,lwd=10,max_dist=NA,rm0=F){
 #'
 #' cent=extract_centroids(positive_clustering)
 #' ggplot(cent,aes(x=pos,y=signal,colour=factor(cluster)))+geom_point()+geom_line()+theme_minimal()+facet_grid(. ~ cluster)+guides(colour=guide_legend(title="cluster"))
+#' @export
 extract_centroids=function(tsclust_obj){
   centroids=tsclust_obj@centroids
   cul=unlist(centroids)
@@ -420,6 +428,7 @@ extract_centroids=function(tsclust_obj){
 #' positive_clustering=tsclust(squiggles$positive,type="h",k=k_clusters,trace=TRUE,distance = "dtw_basic", control=hierarchical_control(method="ward.D",symmetric = T))
 #'
 #' cpr=clusters_per_read(positive_clustering)
+#' @export
 clusters_per_read=function(tsclust_obj){
   xxx=positive_clustering@cluster
   yyy=strsplit(gsub("\\.chunk","",names(xxx)),"_")
