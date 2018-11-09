@@ -431,7 +431,7 @@ extract_centroids=function(tsclust_obj){
 #' cpr=clusters_per_read(positive_clustering)
 #' @export
 clusters_per_read=function(tsclust_obj){
-  xxx=positive_clustering@cluster
+  xxx=tsclust_obj@cluster
   yyy=strsplit(gsub("\\.chunk","",names(xxx)),"_")
   zzz=data.frame(name=sapply(yyy,function(x) x[1]),chunk_number=as.integer(sapply(yyy,function(x) x[3])),cluster=xxx,stringsAsFactors = F)
   zzz2=zzz[order(zzz$name,zzz$chunk_number),]
