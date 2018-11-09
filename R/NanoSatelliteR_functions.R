@@ -94,6 +94,7 @@ qual_reads=function(df,center_cutoff=1,flank_cutoff=1){
 #' plot_lengths(df2)
 #' @export
 plot_lengths=function(df,binwidth=5){
+  library(ggplot2)
   df$strand_factor=factor(df$strand,levels=c("positive","negative"))
 
   ggplot()+
